@@ -8,7 +8,10 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-function Todo({ title, details }) {
+function Todo({ todo ,handleChangeTodo}) {
+  function isCompletedhnadler() {
+       handleChangeTodo(todo.id,todo.isCompleted)
+  }
   return (
     <>
       <Card
@@ -23,8 +26,8 @@ function Todo({ title, details }) {
         <CardContent>
           <Grid className="effectNote" container spacing={2}>
             <Grid size={8} sx={{ background: "red" }}>
-              <Typography variant="h4">{title}</Typography>
-              <Typography variant="h5"> {details}</Typography>
+              <Typography variant="h4">{todo.title}</Typography>
+              <Typography variant="h5"> {todo.details}</Typography>
             </Grid>
             <Grid
               size={4}
@@ -36,13 +39,16 @@ function Todo({ title, details }) {
                 className="iconClass"
                 aria-label="CheckIcon"
                 style={{
-                  background: "white",
+                  background: todo.isCompleted?"white":"green",
                   borderRadius: "50px",
                   width: "30%",
                   height: "60%",
                 }}
+                onClick={isCompletedhnadler}
               >
-                <CheckIcon></CheckIcon>
+                <CheckIcon   style={{
+                  color: todo.isCompleted?"green":"white",
+                }}></CheckIcon>
               </IconButton>
 
               <IconButton

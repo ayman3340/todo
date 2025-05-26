@@ -29,14 +29,23 @@ export default function TodoList() {
 
   const [titleInput, SetTitleInput] = React.useState("");
 
+  function handleChangeTodo(id) {
+  const updateTodo = todos.map((e)=>{
+      if (e.id == id) {
+        e["isCompleted"] = !e["isCompleted"]
+      }
+      return e
+    })
+    getTodos(updateTodo);
+  }
+
   const todosData = todos.map((e) => {
     return (
       <Todo
         style={{ marginTop: "50px" }}
         key={e.id}
-        id={e.id}
-        title={e.title}
-        details={e.details}
+        todo={e}
+        handleChangeTodo={handleChangeTodo}
       ></Todo>
     );
   });
@@ -52,7 +61,7 @@ export default function TodoList() {
     stylisPlugins: [prefixer, rtlPlugin],
   });
 
-  function handleAddClick(params) {
+  function handleAddClick() {
     const newTodo = {
       id: uuidv4(),
       title:titleInput,
