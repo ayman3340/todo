@@ -1,0 +1,26 @@
+* {
+box-sizing: border-box;
+padding: 0;
+margin: 0;
+}
+
+/* Custom fonts*/
+@font-face{
+
+    font-family: Alexandria-Black;
+    src:url("../public/fonts/Alexandria-Black.ttf");
+    font-weight:lighter;
+}
+
+.iconClass:hover{
+    background-color: green !important;
+    color: black !important;
+}
+
+.effectNote:hover{
+    padding: 20px 0px;
+}
+
+.effectNote{
+    transition: all 0.2s !important;
+}
