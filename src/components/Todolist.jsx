@@ -15,29 +15,15 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import { TodosContext } from "../contexts/TodosContext";
+import { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function TodoList() {
-  let [todos, getTodos] = React.useState([
-    {
-      id: uuidv4(),
-      title: "قراءة كتاب",
-      details: "بنسيمب",
-      isCompleted: false,
-    },
-  ]);
+  const { todos, getTodos } = useContext(TodosContext);
 
   const [titleInput, SetTitleInput] = React.useState("");
 
-  function handleChangeTodo(id) {
-  const updateTodo = todos.map((e)=>{
-      if (e.id == id) {
-        e["isCompleted"] = !e["isCompleted"]
-      }
-      return e
-    })
-    getTodos(updateTodo);
-  }
 
   const todosData = todos.map((e) => {
     return (
@@ -45,7 +31,6 @@ export default function TodoList() {
         style={{ marginTop: "50px" }}
         key={e.id}
         todo={e}
-        handleChangeTodo={handleChangeTodo}
       ></Todo>
     );
   });
@@ -64,12 +49,12 @@ export default function TodoList() {
   function handleAddClick() {
     const newTodo = {
       id: uuidv4(),
-      title:titleInput,
-      details:"",
-      isCompleted:false
-    }
-    getTodos([...todos,newTodo]);
-    SetTitleInput("")
+      title: titleInput,
+      details: "",
+      isCompleted: false,
+    };
+    getTodos([...todos, newTodo]);
+    SetTitleInput("");
   }
   return (
     <Container maxWidth="sm">
@@ -95,9 +80,11 @@ export default function TodoList() {
               <CacheProvider value={cacheRtl}>
                 <ThemeProvider theme={theme}>
                   <div dir="rtl">
-                    <TextField label="ادخال المهام" variant="outlined" 
-                    value={titleInput}
-                    onChange={(e)=>SetTitleInput(e.target.value)}
+                    <TextField
+                      label="ادخال المهام"
+                      variant="outlined"
+                      value={titleInput}
+                      onChange={(e) => SetTitleInput(e.target.value)}
                     />
                   </div>
                 </ThemeProvider>
