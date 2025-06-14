@@ -8,7 +8,7 @@ margin: 0;
 @font-face{
 
     font-family: Alexandria-Black;
-    src:url("../public/fonts/Alexandria-Black.ttf");
+    src:url("../fonts/Alexandria-Black.ttf");
     font-weight:lighter;
 }
 

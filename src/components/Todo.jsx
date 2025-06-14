@@ -18,55 +18,60 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
 function Todo({ todo }) {
-  const [updateTodoEdite, setupdateTodoEdite] = useState({
+  const [updateTodoEdit, setUpdateTodoEdit] = useState({
     title: todo.title,
     details: todo.details,
   });
 
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showEditAlert, setShowEditAlert] = useState(false);
-
-  const { todos, getTodos } = useContext(TodosContext);
+  const { todos,  setTodos } = useContext(TodosContext);
 
   // dialog function
   function handleDeleteClick() {
     setShowDeleteAlert(true);
   }
 
-  function handleCanselDeleteDialog() {
+  function handleCancelDeleteDialog() {
     setShowDeleteAlert(false);
   }
 
-  function handleEditeDialog() {
+  function handleEditDialog() {
     setShowEditAlert(true);
   }
 
-  function handleCanselEditeDialog() {
+  function handleCancelEditDialog() {
     setShowEditAlert(false);
   }
 
+  
   function handleDeleteConfirm() {
     const updateTodo = todos.filter((e) => {
       return e.id != todo.id;
     });
-    getTodos(updateTodo);
+    setTodos(updateTodo);
+    localStorage.setItem("todos", JSON.stringify(updateTodo));
   }
+
+
   function handleEditConfirm() {
     const updateTodo = todos.map((e) => {
       if (e.id == todo.id) {
         return {
           ...e,
-          title: updateTodoEdite.title,
-          details: updateTodoEdite.details,
+          title: updateTodoEdit.title,
+          details: updateTodoEdit.details,
         };
       } else {
         return e;
       }
     });
-    getTodos(updateTodo);
+    setTodos(updateTodo);
+    localStorage.setItem("todos", JSON.stringify(updateTodo));
     setShowEditAlert(false);
   }
-  console.log(showEditAlert);
+
+
   function handleChangeTodo() {
     const updateTodo = todos.map((e) => {
       if (e.id == todo.id) {
@@ -74,7 +79,8 @@ function Todo({ todo }) {
       }
       return e;
     });
-    getTodos(updateTodo);
+    setTodos(updateTodo);
+    localStorage.setItem("todos", JSON.stringify(updateTodo));
   }
 
   return (
@@ -83,55 +89,41 @@ function Todo({ todo }) {
       <Dialog
         style={{ direction: "rtl" }}
         open={showEditAlert}
-        onClose={handleCanselEditeDialog}
-        slotProps={{
-          paper: {
-            component: "form",
-            onSubmit: (event) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries(formData.entries());
-              const email = formJson.email;
-              console.log(email);
-            },
-          },
-        }}
+        onClose={handleCancelEditDialog}
       >
         <DialogTitle>تعديل مهمة</DialogTitle>
         <DialogContent>
-          <DialogContentText>اكتب عنوان</DialogContentText>
+          <DialogContentText>العنوان</DialogContentText>
           <TextField
             autoFocus
             required
             margin="dense"
-            id="  "
+            id="titleData"
             name="text"
-            label="اكتب التفاصيل"
             type="text"
             fullWidth
             variant="standard"
-            value={updateTodoEdite.title}
+            value={updateTodoEdit.title}
             onChange={(e) => {
-              setupdateTodoEdite({ ...updateTodoEdite, title: e.target.value });
+              setUpdateTodoEdit({ ...updateTodoEdit, title: e.target.value });
             }}
           />
         </DialogContent>
         <DialogContent>
-          <DialogContentText>اكتب الملاحظة</DialogContentText>
+          <DialogContentText>المهمة</DialogContentText>
           <TextField
             autoFocus
             required
             margin="dense"
             id="name"
             name="text"
-            label="اكتب التفاصيل"
             type="text"
             fullWidth
             variant="standard"
-            value={updateTodoEdite.details}
+            value={updateTodoEdit.details}
             onChange={(e) => {
-              setupdateTodoEdite({
-                ...updateTodoEdite,
+              setUpdateTodoEdit({
+                ...updateTodoEdit,
                 details: e.target.value,
               });
             }}
@@ -139,7 +131,7 @@ function Todo({ todo }) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCanselEditeDialog}>الغاء التعديل</Button>
+          <Button onClick={handleCancelEditDialog}>الغاء</Button>
           <Button type="submit" onClick={handleEditConfirm}>
             تعديل
           </Button>
@@ -155,10 +147,10 @@ function Todo({ todo }) {
         // onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onClose={handleCanselDeleteDialog}
+        onClose={handleCancelDeleteDialog}
       >
         <DialogTitle id="alert-dialog-title">
-          هل انت متاكد من حذق المهمة
+          هل انت متاكد من حذف المهمة
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -166,7 +158,7 @@ function Todo({ todo }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCanselDeleteDialog}>الغاء</Button>
+          <Button onClick={handleCancelDeleteDialog}>الغاء</Button>
           <Button autoFocus onClick={handleDeleteConfirm}>
             اوفق
           </Button>
@@ -180,13 +172,14 @@ function Todo({ todo }) {
           background: "grey",
           marginTop: "20px",
           marginBottom: "20px",
+          width: "100%",
         }}
       >
         <CardContent>
           <Grid className="effectNote" container spacing={2}>
-            <Grid size={8} sx={{ background: "red" }}>
-              <Typography variant="h4">{todo.title}</Typography>
-              <Typography variant="h5"> {todo.details}</Typography>
+            <Grid size={8}>
+              <Typography variant="h4" style={{color:"rgba(1, 2, 3, 0.91)"}}>{todo.title}</Typography>
+              <Typography variant="h6" style={{color:"rgba(255, 255, 255, 0.88)" ,display:"inline-block",width:"100%",height:"100%"}}> {todo.details}</Typography>
             </Grid>
             <Grid
               size={4}
@@ -198,16 +191,14 @@ function Todo({ todo }) {
                 className="iconClass"
                 aria-label="CheckIcon"
                 style={{
-                  background: todo.isCompleted ? "white" : "green",
+                  background: todo.isCompleted ? "green" : "white",
                   borderRadius: "50px",
-                  width: "30%",
-                  height: "60%",
                 }}
                 onClick={handleChangeTodo}
               >
                 <CheckIcon
                   style={{
-                    color: todo.isCompleted ? "green" : "white",
+                    color: todo.isCompleted ? "white" : "green",
                   }}
                 ></CheckIcon>
               </IconButton>
@@ -218,10 +209,8 @@ function Todo({ todo }) {
                 style={{
                   background: "white",
                   borderRadius: "50px",
-                  width: "30%",
-                  height: "60%",
                 }}
-                onClick={handleEditeDialog}
+                onClick={handleEditDialog}
               >
                 <EditIcon></EditIcon>
               </IconButton>
@@ -233,8 +222,6 @@ function Todo({ todo }) {
                 style={{
                   background: "white",
                   borderRadius: "50px",
-                  width: "30%",
-                  height: "60%",
                 }}
                 onClick={handleDeleteClick}
               >

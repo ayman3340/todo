@@ -10,23 +10,18 @@ const theme = createTheme({
   },
 });
 
+
 function App() {
   const InitialTodos = [
     {
       id: uuidv4(),
       title: "قراءة كتاب",
-      details: "بنسيمب",
-      isCompleted: false,
-    },
-    {
-      id: uuidv4(),
-      title: "العاب فيديو",
-      details: "سيبسيبسيبس",
+      details: "كتب عن اي شيء تريد ان تقراء فيه",
       isCompleted: false,
     },
   ];
 
-  let [todos, getTodos] = React.useState(InitialTodos);
+  let [todos, setTodos] = React.useState(InitialTodos);
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,7 +36,7 @@ function App() {
           flexDirection: "column",
         }}
       >
-        <TodosContext.Provider value={{ todos, getTodos }}>
+        <TodosContext.Provider value={{ todos, setTodos }}>
           <TodoList></TodoList>
         </TodosContext.Provider>
       </div>
